@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ino.web.freeBoard.mapper.FreeBoardMapper">
+	
+	 
+	
+	<insert id="freeBoardInsertPro" parameterType="Map">
+		INSERT INTO FREEBOARD(NUM, TITLE, NAME, REGDATE, CONTENT)
+		VALUES( NUM.NEXTVAL, #{title}, #{name}, SYSDATE, #{content})
+	</insert>
+	
+	<select id="freeBoardDetailByNum" resultType="Map" parameterType="int">
+		SELECT NUM, TITLE, NAME, TO_CHAR(REGDATE, 'YYYY/MM/DD') REGDATE, CONTENT FROM FREEBOARD
+		WHERE NUM=#{num}
+	</select>
+	
+	<select id="freeBoardNewNum" resultType="int">
+		SELECT MAX(NUM)
+		FROM FREEBOARD
+	</select>
+	
+	
+	<update id="freeBoardModify" parameterType="Map">
+		UPDATE FREEBOARD
+		SET TITLE = #{title}
+				, CONTENT = #{content}
+		WHERE NUM = #{num}
+	</update>
+	
+	<update id="freeBoardDelete" parameterType="int">
+		DELETE FROM FREEBOARD
+		WHERE NUM
+		= #{num}
+		
+	</update>
+	
+	
+	
+	<!-- 검색한 게시물의 갯수 계산 -->	
+	<select id="freeBoardCount" resultType="int">
+		select count(*)
+		from FREEBOARD
+		 WHERE 1 = 1
+		     
+          <if test="search_option == 'DECODE001' and search_option != '' ">
+           AND NUM like '%'||#{keyword}||'%' AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+          </if>
+          
+          
+          <if test="search_option == 'DECODE002' and search_option != '' ">
+           AND TITLE like '%'||#{keyword}||'%' AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+          </if>
+          
+          
+           <if test="startDate != '' and endDate != '' ">
+ 			AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+          </if>
+          
+	</select>
+	
+	
+
+	
+	
+	
+	
+	<select id="freeBoardlist" resultType="Map"> <!-- resultType="ino.web.board.dto.BoardDto" -->
+		
+		select *
+		from (
+		    select rownum as rn, A.*
+		    from (	
+		SELECT NUM
+		     , TITLE
+		     , NAME
+		     , TO_CHAR(REGDATE,'YYYY/MM/DD') REGDATE
+		     , CONTENT 
+		  FROM FREEBOARD
+		 WHERE 1 = 1
+		  <if test="search_option == 'DECODE001' and search_option != '' ">
+           AND NUM like '%'||#{keyword}||'%' AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+          </if>
+          
+          
+          <if test="search_option == 'DECODE002' and search_option != '' ">
+           AND TITLE like '%'||#{keyword}||'%' AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+          </if>
+          
+          
+          <if test="startDate != '' and endDate != '' ">
+ 			AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+          </if>
+          
+		ORDER BY LPAD( NUM, 5 ) DESC
+		
+		 ) A
+		) where rn between #{start} and #{end}	
+		
+			</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  tiles-definitions PUBLIC
+    "-//Aapche Software Foundation//DTD Tiles Configuration 2.0//EN"
+    "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+    <definition name="mainTemplate" template="/WEB-INF/view/template/defaultMain.jsp"/>
+
+<!-- 메인페이지 -->
+    <definition name="boardMain" extends="mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/defaultMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/freeBoard/freeBoardMain.jsp" />
+    </definition>
+    
+    <!-- 공통코드 -->
+       <definition name="commonCodeMain" extends="mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/commonCodeMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/commonCode/commonCodeMain.jsp" />
+    </definition>
+   
+    
+    <!-- 공지사항 -->
+     <definition name="notice" extends="mainTemplate">
+    	<put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/noticeMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/authorityCode/notice.jsp" />
+    </definition>
+    
+    <!-- 이벤트 -->
+      <definition name="event" extends="mainTemplate">
+    	<put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/eventMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/authorityCode/event.jsp" />
+    </definition>
+    
+    <!-- Q&A -->
+      <definition name="questionAndAnswer" extends="mainTemplate">
+    	<put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/questionAndAnswerMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/authorityCode/questionAndAnswer.jsp" />
+    </definition>
+    
+    <!-- 게시판 -->
+    <definition name="board" extends="mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/freeBoardMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/freeBoard/freeBoardMain.jsp" />
+    </definition>
+    
+    
+     <!-- 공통코드 -->
+     <definition name="authorityCodeMain" extends="mainTemplate">
+     <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/authorityCodeMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+         <put-attribute name="content" value="/WEB-INF/view/authorityCode/authorityCodeMain.jsp" />
+    </definition>
+    
+
+    <definition name="freeBoardInsert" extends="mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/defaultMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/freeBoard/freeBoardInsert.jsp" />
+    </definition>
+    
+    
+    <definition name="freeBoardDetail" extends="mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/defaultMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/freeBoard/freeBoardDetail.jsp" />
+    </definition>
+    
+
+    <definition name="commonCodeInsert" extends="mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/defaultMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/commonCode/commonCodeInsert.jsp" />
+    </definition>
+    
+   <definition name="commonCodeDetail" extends="mainTemplate">
+    	<put-attribute name="header" value="" />
+        <put-attribute name="menu" value="" />
+        <put-attribute name="footer" value="" />
+        <put-attribute name="content" value="/WEB-INF/view/commonCode/commonCodeDetail.jsp" />
+    </definition>
+    
+    
+      <definition name="defaultMenu" extends="mainTemplate">
+    	<put-attribute name="header" value="/WEB-INF/view/template/defaultHeader.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/template/defaultMenu.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/view/template/defaultFooter.jsp" />
+        <put-attribute name="content" value="" />
+    </definition>
+    
+  
+     <definition name="login" extends="mainTemplate">
+    	<put-attribute name="header" value="" />
+        <put-attribute name="menu" value="" />
+        <put-attribute name="footer" value="" />
+        <put-attribute name="content" value="/WEB-INF/view/member/login.jsp" />
+    </definition>
+   
+
+</tiles-definitions>

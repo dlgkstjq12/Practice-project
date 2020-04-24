@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ino.web.commonCode.mapper">
+	
+	<select id="selectCommonCodeList" resultType="Map">
+	
+		SELECT A.CODE
+		     , D.DECODE
+		     , D.DECODE_NAME
+		  FROM MASTERTABLE A , DATAILTABLE D
+		 WHERE A.CODE = D.CODE	 	
+		   AND A.CODE = #{code}		   	   		   
+		   AND D.USE_YN = 'Y'
+	
+	</select>
+	
+	
+	<select id="CommonCodeList" resultType="Map">
+	
+		SELECT * FROM MASTERTABLE 
+	
+	</select>
+	
+	
+	<select id="CommonCodeDetail" resultType="Map">
+	
+		SELECT DECODE
+			, DECODE_NAME
+			, USE_YN
+			, CODE
+		FROM DATAILTABLE
+		WHERE CODE = #{num} 
+	
+	</select>
+	
+	
+	<insert id="CommonCodeInsert" parameterType="Map">
+		INSERT INTO DATAILTABLE(CODE, DECODE, DECODE_NAME, USE_YN)
+		VALUES( #{num}, #{decode}, #{decode_name}, #{use_yn})
+	</insert>
+	
+	
+	<delete id="CommonCodeDelete" parameterType="Map">
+		DELETE FROM DATAILTABLE
+		WHERE DECODE
+		= #{decode}
+		
+	</delete>
+	
+	
+	
+</mapper>

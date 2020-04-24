@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ino.web.member.mapper">
+	
+	<select id="loginCheck" parameterType="Map" resultType="String">
+	
+		SELECT USERID
+		FROM usertable
+		WHERE USERID =#{user_id} 
+		AND
+		USERPASS =#{member_pass}
+	
+	</select>
+	
+	
+	
+	<!-- ROWNUM을 안쓰면 여러개를 가져오기때문에 한개의 값만 가져오기 위해 사용했음. -->
+	<!-- mybatis에서 부등호 사용시에는 CDATA안에 사용해야한다.
+	XML 태그의 부등호와 같기때문에 파싱시 에러가 발생하기 때문 -->
+	<select id="id_authoritylist" parameterType="Map" resultType="String">
+	
+	  SELECT GROUPID 
+           FROM mappingtable
+           WHERE ROWNUM  <![CDATA[  <=  ]]>  1 AND GROUPID IN (SELECT GROUPID FROM usertable WHERE USERID IN #{user_id}) ORDER BY ORDERSEQ 
+	
+	</select>
+	
+	
+	<!-- 그룹아이디에 따라서 매핑테이블에서 값들을 가져옴 -->
+	<select id="id_list" parameterType="Map" resultType="Map">
+	    SELECT m.GROUPID, m.OBJECTID, m.OBJECTNM, m.ORDERSEQ, o.HIGH_OBJ, o.DEPT
+		FROM 
+		OBJECTTABLE o, MAPPINGTABLE m 
+		WHERE o.OBJECTID in m.OBJECTID AND GROUPID in #{groupid} ORDER BY OBJECTID
+      </select>     
+
+
+</mapper>

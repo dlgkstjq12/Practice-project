@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ino.web.authorityCode.mapper">
+	
+	<!-- 그룹테이블 -->
+	<select id="authorityCodeList" resultType="Map">
+	
+		SELECT GROUPID
+		     , GROUPNM
+		     , USE_YN
+		  FROM grouptable 
+	
+	</select>
+	
+	
+<!-- 	그룹아이디 클릭시 불러오는 리스트  -->
+<!-- 화면에 출력할 부분, 매핑테이블과 오브젝트 테이블을 하나로 합칠때 서로 없는 컬럼들이 있기때문에 테이블을 조인해서 서로 붙이고,
+JUDGMENT라는 컬럼을 가상으로 만들어서 이 컬럼에 값이 들어있는지 여부로 매핑테이블과 오브젝트 테이블을 구분할 수가 있다. -->
+
+<select id="authorityCodeSearchList" parameterType="Map" resultType="Map">
+
+SELECT GROUPID, OBJECTID, OBJECTNM, HIGH_OBJ, DEPT, JUDGMENT
+   
+    FROM (
+    
+     	SELECT #{groupid} AS GROUPID ,   	
+     	OBJECTID, 
+     	OBJECTNM,  
+     	HIGH_OBJ, 
+     	DEPT, 
+     	NULL AS JUDGMENT
+     	FROM objecttable WHERE OBJECTID NOT IN (SELECT OBJECTID FROM mappingtable WHERE GROUPID = #{groupid})
+      
+    UNION
+    
+      	SELECT GROUPID ,
+      	OBJECTID,
+      	OBJECTNM,
+      	(SELECT o.HIGH_OBJ FROM objecttable o WHERE o.OBJECTID = mappingtable.OBJECTID AND mappingtable.GROUPID = #{groupid})AS HIGH_OBJ,
+    	(SELECT o.DEPT FROM objecttable o WHERE o.OBJECTID = mappingtable.OBJECTID AND mappingtable.GROUPID = #{groupid})AS DEPT,
+    	ORDERSEQ AS JUDGMENT 
+      	FROM mappingtable WHERE GROUPID = #{groupid}
+     
+      )
+
+	</select>
+
+
+	<!-- 메인만 먼저 insert 시킬때 사용 -->	
+	<insert id="authorityCodemain_insert" parameterType="Map"> 
+	INSERT INTO mappingtable VALUES(#{groupid}, #{checkid} ,#{objectnm}, m_ORDERSEQ.nextval)
+	</insert>
+
+
+
+	<!-- insert시 view에서 받아온 high_obj가 매핑테이블에 저장이 되어 있고, high_obj의 dept보다 클때에만 자료가 저장이 되도록함 -->
+	<insert id="authorityCodeListsave_insert" parameterType="Map">   
+	
+ 	INSERT INTO mappingtable 
+    SELECT #{groupid}, #{checkid} ,#{objectnm}, m_ORDERSEQ.nextval
+    FROM dual
+	WHERE 
+	EXISTS (SELECT OBJECTID FROM mappingtable WHERE OBJECTID = #{high_obj} AND GROUPID = #{groupid})
+	OR 1 = (SELECT DEPT FROM objecttable WHERE OBJECTID = #{checkid})
+	
+
+	</insert>
+
+
+	
+	<!-- view에서 가져온 오브젝트 아이디와 high_obj를 매핑테이블과 비교해서, 
+	매핑테이블에서 하위객체가 있는 상태에서 상위객체가 먼저 삭제되지 않게끔한다. -->
+	<delete id="authorityCodeListsave_delete" parameterType="Map">
+	DELETE FROM mappingtable WHERE OBJECTID = #{uncheckid} AND GROUPID =  #{groupid}
+	AND 
+	NOT EXISTS (SELECT OBJECTID FROM mappingtable WHERE OBJECTID IN (SELECT OBJECTID FROM objecttable WHERE HIGH_OBJ IN #{uncheckid}) AND GROUPID = #{groupid})
+	</delete>
+	
+	
+	
+	<!-- 오브젝트 테이블  -->
+	<select id="authorityobjectlist" resultType="Map">
+		SELECT OBJECTID
+		     , OBJECTNM
+		     , HIGH_OBJ
+		     , DEPT
+		  FROM objecttable
+	</select>
+	
+	
+	
+	<!-- 매핑테이블에 있는 그룹아이디에 해당하는 값들을 가져옴, 매핑테이블 컬럼에 대한 high_obj도 join해서 같이 가져온다. -->
+	<select id="authoritymappinglist" resultType="Map">
+	
+		SELECT m.GROUPID, m.OBJECTID, m.OBJECTNM, m.ORDERSEQ, o.HIGH_OBJ, o.DEPT
+		FROM 
+		OBJECTTABLE o, MAPPINGTABLE m 
+		WHERE o.OBJECTID in m.OBJECTID AND GROUPID in #{groupid}
+	
+	</select>
+	
+	
+	
+</mapper>
